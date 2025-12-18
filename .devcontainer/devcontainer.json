@@ -7,6 +7,7 @@
     "vscode": {
       "extensions": [
         "google.gemini-cli-vscode-ide-companion",
+        "anthropic.claude-code",
         "anysphere.cursorpyright",
         "ms-python.black-formatter",
         "formulahendry.code-runner",
@@ -25,7 +26,6 @@
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": "explicit"
         },
-        // "terminal.integrated.fontFamily": "MesloLGS NF",
         "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.profiles.linux": {
           "zsh": {
@@ -39,12 +39,16 @@
   "features": {},
   "remoteUser": "devcontainer",
   "mounts": [
+    // gemini settings
     "source=${localEnv:HOME}/.gemini,target=/home/devcontainer/.gemini,type=bind,consistency=cached",
+    // claude settings
+    "source=${localEnv:HOME}/.claude,target=/home/devcontainer/.claude,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.claude.json,target=/home/devcontainer/.claude.json,type=bind,consistency=cached",
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    // tmux settings
     "source=${localEnv:HOME}/.tmux.conf,target=/home/devcontainer/.tmux.conf,type=bind,consistency=cached",
+    // zsh settings
     "source=${localWorkspaceFolder}/.devcontainer/.zshrc,target=/home/devcontainer/.zshrc,type=bind,consistency=cached"
-    // "source=${localEnv:HOME}/.p10k.zsh,target=/home/devcontainer/.p10k.zsh,type=bind,consistency=cached",
-    // "source=${localEnv:HOME}/.oh-my-zsh,target=/home/devcontainer/.oh-my-zsh,type=bind,consistency=cached",
-    // "source=${localEnv:HOME}/.dotfiles,target=/home/devcontainer/.dotfiles,type=bind,consistency=cached"
   ],
   "postCreateCommand": "",
   "waitFor": "postStartCommand"

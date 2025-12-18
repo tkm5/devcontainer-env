@@ -20,19 +20,19 @@ RUN apt update && \
   tree \
   procps \
   man-db \
-  unzip && \
-  apt clean
-
-# Install Font
-RUN wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+  unzip \
+  && apt clean && rm -rf /var/lib/apt/lists/*
 
 # Define the user
 ARG USERNAME=devcontainer
 RUN adduser --disabled-password --gecos '' ${USERNAME}
 RUN echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
 
+# Install uv (Python will be installed and managed with uv)
+COPY --from=ghcr.io/astral-sh/uv:0.9.18 /uv /uvx /bin/
+
 # Install Node.js
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 RUN wget -qO nodesource_setup.sh https://deb.nodesource.com/setup_${NODE_VERSION}.x && \
   bash nodesource_setup.sh && \
   apt install -y nodejs
@@ -41,7 +41,7 @@ RUN wget -qO nodesource_setup.sh https://deb.nodesource.com/setup_${NODE_VERSION
 RUN mkdir -p /usr/local/share/npm-global && \
     chown -R ${USERNAME}:${USERNAME} /usr/local/share/npm-global
 ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
-ENV PATH="/usr/local/share/npm-global/bin:${PATH}"
+ENV PATH=/usr/local/share/npm-global/bin:$PATH
 
 # Set `DEVCONTAINER` environment variable to help with orientation
 ENV DEVCONTAINER=true
@@ -63,7 +63,6 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -p aliases \
   -p git \
   -p https://github.com/zsh-users/zsh-syntax-highlighting \
-  -a "CASE_SENSITIVE='true'" \
   -a "export HISTFILE=/commandhistory/.zsh_history" \
   -x
 
@@ -71,6 +70,5 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 ARG GEMINI_CLI_VERSION=latest
 RUN npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 
-# Install uv (Python will be installed and managed with uv)
-COPY --from=ghcr.io/astral-sh/uv:0.8.15 /uv /uvx /bin/
-RUN echo 'eval "$(uv generate-shell-completion zsh)"' >> ~/.zshrc
+ARG CLAUDE_CODE_VERSION=latest
+RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
