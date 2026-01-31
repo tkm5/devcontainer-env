@@ -38,6 +38,9 @@ export HISTFILE=/commandhistory/.zsh_history
 #------------------
 alias t="tmux"
 
+alias cc="claude"
+alias ccy="claude --dangerously-skip-permissions"
+
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_last"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(user dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
