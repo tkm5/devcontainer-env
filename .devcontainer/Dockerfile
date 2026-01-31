@@ -21,6 +21,7 @@ RUN apt-get update && \
   procps \
   man-db \
   unzip \
+  xz-utils \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Define the user
@@ -31,13 +32,13 @@ RUN echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
 # Install uv (Python will be installed and managed with uv)
 COPY --from=ghcr.io/astral-sh/uv:0.9.28 /uv /uvx /bin/
 
-# Install Node.js
-ARG NODE_VERSION=24
-RUN wget -qO nodesource_setup.sh https://deb.nodesource.com/setup_${NODE_VERSION}.x && \
-  bash nodesource_setup.sh && \
-  apt-get install -y nodejs && \
-  rm nodesource_setup.sh && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Node.js (official binary)
+ARG NODE_VERSION=24.13.0
+RUN ARCH=$(dpkg --print-architecture) && \
+  if [ "$ARCH" = "amd64" ]; then ARCH="x64"; fi && \
+  wget -qO node.tar.xz "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}.tar.xz" && \
+  tar -xJf node.tar.xz -C /usr/local --strip-components=1 && \
+  rm node.tar.xz
 
 # Setup npm global packages directory for non-root user
 RUN mkdir -p /usr/local/share/npm-global && \
