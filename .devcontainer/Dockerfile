@@ -6,8 +6,8 @@ ENV TZ="$TZ"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && \
-  apt install -y \
+RUN apt-get update && \
+  apt-get install -y \
   sudo \
   zsh \
   curl \
@@ -21,7 +21,7 @@ RUN apt update && \
   procps \
   man-db \
   unzip \
-  && apt clean && rm -rf /var/lib/apt/lists/*
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Define the user
 ARG USERNAME=devcontainer
@@ -35,9 +35,9 @@ COPY --from=ghcr.io/astral-sh/uv:0.9.28 /uv /uvx /bin/
 ARG NODE_VERSION=24
 RUN wget -qO nodesource_setup.sh https://deb.nodesource.com/setup_${NODE_VERSION}.x && \
   bash nodesource_setup.sh && \
-  apt install -y nodejs && \
+  apt-get install -y nodejs && \
   rm nodesource_setup.sh && \
-  apt clean && rm -rf /var/lib/apt/lists/*
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Setup npm global packages directory for non-root user
 RUN mkdir -p /usr/local/share/npm-global && \
