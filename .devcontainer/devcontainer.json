@@ -36,7 +36,6 @@
       }
     }
   },
-  "features": {},
   "remoteUser": "devcontainer",
   "mounts": [
     // gemini settings
@@ -49,7 +48,5 @@
     "source=${localEnv:HOME}/.tmux.conf,target=/home/devcontainer/.tmux.conf,type=bind,consistency=cached",
     // zsh settings
     "source=${localWorkspaceFolder}/.devcontainer/.zshrc,target=/home/devcontainer/.zshrc,type=bind,consistency=cached"
-  ],
-  "postCreateCommand": "",
-  "waitFor": "postStartCommand"
+  ]
 }

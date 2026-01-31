@@ -1,6 +1,9 @@
 export LANG='en_US.UTF-8'
 export LANGUAGE='en_US:en'
 export LC_ALL='en_US.UTF-8'
+
+# Add ~/.local/bin to PATH for Claude Code
+export PATH="$HOME/.local/bin:$PATH"
 # [ -z "" ] && export TERM=xterm
 
 ##### Zsh/Oh-my-Zsh Configuration

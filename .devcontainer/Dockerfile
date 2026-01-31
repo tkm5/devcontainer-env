@@ -29,13 +29,15 @@ RUN adduser --disabled-password --gecos '' ${USERNAME}
 RUN echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
 
 # Install uv (Python will be installed and managed with uv)
-COPY --from=ghcr.io/astral-sh/uv:0.9.18 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.9.28 /uv /uvx /bin/
 
 # Install Node.js
 ARG NODE_VERSION=24
 RUN wget -qO nodesource_setup.sh https://deb.nodesource.com/setup_${NODE_VERSION}.x && \
   bash nodesource_setup.sh && \
-  apt install -y nodejs
+  apt install -y nodejs && \
+  rm nodesource_setup.sh && \
+  apt clean && rm -rf /var/lib/apt/lists/*
 
 # Setup npm global packages directory for non-root user
 RUN mkdir -p /usr/local/share/npm-global && \
@@ -70,5 +72,5 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 ARG GEMINI_CLI_VERSION=latest
 RUN npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 
-ARG CLAUDE_CODE_VERSION=latest
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
+# Install Claude Code
+RUN curl -fsSL https://claude.ai/install.sh | bash

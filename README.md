@@ -15,11 +15,12 @@ This environment includes the following tools and configurations to streamline y
     - **Oh My Zsh** installed.
     - **Syntax Highlighting**: Visually prevents command entry errors.
     - **Git Delta**: Enhances `git diff` output for better readability.
-- **Node.js**: v22 - Includes the latest LTS (or current) version. Ready for frontend and server-side JavaScript development.
-- **Python (uv)**: [uv](https://github.com/astral-sh/uv) (v0.8.15) - An extremely fast Python package and project manager. Handles Python version management and dependency resolution in one tool.
+- **Node.js**: v24 (LTS) - Includes the latest LTS version. Ready for frontend and server-side JavaScript development.
+- **Python (uv)**: [uv](https://github.com/astral-sh/uv) (v0.9.28) - An extremely fast Python package and project manager. Handles Python version management and dependency resolution in one tool.
 
 ### Pre-installed Tools
 
+- **Claude Code**: Anthropic's official CLI for Claude, enabling AI-assisted development directly from the terminal.
 - **Gemini CLI**: AI assistant capabilities available directly from the command line.
 - **GitHub CLI (gh)**: Manage GitHub workflows (PRs, Issues, etc.) from the command line.
 - **fzf**: A general-purpose command-line fuzzy finder. Makes command history and file searching efficient.
@@ -76,7 +77,7 @@ uv run main.py
 
 ### Node.js
 
-Node.js (v22) is available globally.
+Node.js (v24) is available globally.
 
 ```bash
 # Check versions
