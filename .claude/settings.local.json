@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(devcontainer build:*)",
+      "Bash(devcontainer up:*)",
+      "Bash(devcontainer exec:*)",
+      "Bash(docker ps:*)",
+      "WebSearch",
+      "Bash(python3:*)",
+      "Bash(docker run:*)",
+      "Bash(docker volume rm:*)",
+      "Bash(gh api:*)",
+      "Bash(chmod:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)"
+    ]
+  }
+}
