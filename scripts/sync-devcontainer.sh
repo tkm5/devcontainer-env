@@ -38,24 +38,62 @@ if [ -n "${1:-}" ]; then
   echo ""
   echo "=== Syncing auth files to $SERVER ==="
 
-  # Auth targets: directories use trailing slash for rsync
-  AUTH_TARGETS=(
-    "$HOME/.claude/"
-    "$HOME/.claude.json"
-    "$HOME/.gemini/"
-  )
+  # ---------------------------------------------------------------------------
+  # ~/.claude/ - sync only auth/config files, exclude bulky session data
+  # ---------------------------------------------------------------------------
+  if [ -d "$HOME/.claude" ]; then
+    rsync -avz \
+      --exclude='debug/' \
+      --exclude='history.jsonl' \
+      --exclude='projects/' \
+      --exclude='todos/' \
+      --exclude='plans/' \
+      --exclude='file-history/' \
+      --exclude='session-env/' \
+      --exclude='shell-snapshots/' \
+      --exclude='cache/' \
+      --exclude='downloads/' \
+      --exclude='paste-cache/' \
+      --exclude='tasks/' \
+      --exclude='teams/' \
+      --exclude='telemetry/' \
+      --exclude='ide/' \
+      --exclude='stats-cache.json' \
+      --exclude='*.backup.*' \
+      --exclude='*.jsonl' \
+      "$HOME/.claude/" "$SERVER:~/.claude/"
+    ssh "$SERVER" "chmod 700 ~/.claude && find ~/.claude -type f -exec chmod 600 {} +"
+    echo "  Synced: ~/.claude/ -> $SERVER:~/.claude/ (auth/config only)"
+  else
+    echo "  Warning: ~/.claude/ not found, skipping"
+  fi
 
-  for src in "${AUTH_TARGETS[@]}"; do
-    # Derive the relative path (e.g. ~/.claude/, ~/.claude.json)
-    rel_path="~/${src#"$HOME/"}"
+  # ---------------------------------------------------------------------------
+  # ~/.claude.json - top-level config
+  # ---------------------------------------------------------------------------
+  if [ -f "$HOME/.claude.json" ]; then
+    rsync -avz "$HOME/.claude.json" "$SERVER:~/.claude.json"
+    ssh "$SERVER" "chmod 600 ~/.claude.json"
+    echo "  Synced: ~/.claude.json -> $SERVER:~/.claude.json"
+  else
+    echo "  Warning: ~/.claude.json not found, skipping"
+  fi
 
-    if [ -e "${src%/}" ]; then
-      rsync -avz --chmod=D700,F600 "$src" "$SERVER:$rel_path"
-      echo "  Synced: $rel_path -> $SERVER:$rel_path"
-    else
-      echo "  Warning: $rel_path not found, skipping"
-    fi
-  done
+  # ---------------------------------------------------------------------------
+  # ~/.gemini/ - sync only auth/config files, exclude bulky data
+  # ---------------------------------------------------------------------------
+  if [ -d "$HOME/.gemini" ]; then
+    rsync -avz \
+      --exclude='history/' \
+      --exclude='tmp/' \
+      --exclude='antigravity-browser-profile/' \
+      --exclude='node_modules/' \
+      "$HOME/.gemini/" "$SERVER:~/.gemini/"
+    ssh "$SERVER" "chmod 700 ~/.gemini && find ~/.gemini -type f -exec chmod 600 {} +"
+    echo "  Synced: ~/.gemini/ -> $SERVER:~/.gemini/ (auth/config only)"
+  else
+    echo "  Warning: ~/.gemini/ not found, skipping"
+  fi
 
   echo "Auth sync to $SERVER complete."
 fi
