@@ -12,7 +12,11 @@
       "Bash(gh api:*)",
       "Bash(chmod:*)",
       "Bash(docker stop:*)",
-      "Bash(docker rm:*)"
+      "Bash(docker rm:*)",
+      "Bash(git -C /Users/takumig/src/devcontainer-env log --oneline -15)",
+      "Bash(bash:*)",
+      "Bash(ssh:*)",
+      "Bash(./scripts/sync-devcontainer.sh:*)"
     ]
   }
 }
