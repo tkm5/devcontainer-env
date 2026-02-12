@@ -51,6 +51,12 @@ POWERLEVEL9K_STATUS_OK=false
 POWERLEVEL9K_STATUS_CROSS=true
 
 #------------------
+# fzf integration
+#------------------
+[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+[ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
+
+#------------------
 # other settings
 #------------------
 eval "$(uv generate-shell-completion zsh)"

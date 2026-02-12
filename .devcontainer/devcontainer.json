@@ -1,7 +1,15 @@
 {
   "name": "Dev Container",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:Asia/Tokyo}",
+      "NODE_VERSION": "24.13.0",
+      "UV_VERSION": "0.9.28",
+      "GEMINI_CLI_VERSION": "latest",
+      "GIT_DELTA_VERSION": "0.18.2",
+      "ZSH_IN_DOCKER_VERSION": "1.2.1"
+    }
   },
   "customizations": {
     "vscode": {
@@ -37,16 +45,24 @@
     }
   },
   "remoteUser": "devcontainer",
+  "containerEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/devcontainer/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=delegated",
+
   "mounts": [
-    // gemini settings
-    "source=${localEnv:HOME}/.gemini,target=/home/devcontainer/.gemini,type=bind,consistency=cached",
-    // claude settings
+    // zsh history (volume mount for persistence across container rebuilds)
+    "source=devcontainer-zsh-history-${devcontainerId},target=/commandhistory,type=volume",
+    // zsh settings
+    "source=${localWorkspaceFolder}/.devcontainer/.zshrc,target=/home/devcontainer/.zshrc,type=bind,consistency=cached",
+    // git settings
+    "source=${localWorkspaceFolder}/.devcontainer/.gitconfig,target=/home/devcontainer/.gitconfig,type=bind,consistency=cached",
+    // claude settings (bind mount from host home directory)
     "source=${localEnv:HOME}/.claude,target=/home/devcontainer/.claude,type=bind,consistency=cached",
     "source=${localEnv:HOME}/.claude.json,target=/home/devcontainer/.claude.json,type=bind,consistency=cached",
-    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
-    // tmux settings
-    "source=${localEnv:HOME}/.tmux.conf,target=/home/devcontainer/.tmux.conf,type=bind,consistency=cached",
-    // zsh settings
-    "source=${localWorkspaceFolder}/.devcontainer/.zshrc,target=/home/devcontainer/.zshrc,type=bind,consistency=cached"
+    // gemini settings (bind mount from host home directory)
+    "source=${localEnv:HOME}/.gemini,target=/home/devcontainer/.gemini,type=bind,consistency=cached"
   ]
 }

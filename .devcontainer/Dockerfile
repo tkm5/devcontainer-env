@@ -1,3 +1,6 @@
+ARG UV_VERSION=0.9.28
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-bin
+
 FROM ubuntu:noble
 
 ARG TZ=Asia/Tokyo
@@ -7,7 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
+  ca-certificates \
   sudo \
   zsh \
   curl \
@@ -16,12 +20,14 @@ RUN apt-get update && \
   git \
   gh \
   fzf \
+  jq \
   less \
   tree \
   procps \
   man-db \
   unzip \
   xz-utils \
+  emacs-nox \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Define the user
@@ -30,7 +36,7 @@ RUN adduser --disabled-password --gecos '' ${USERNAME}
 RUN echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
 
 # Install uv (Python will be installed and managed with uv)
-COPY --from=ghcr.io/astral-sh/uv:0.9.28 /uv /uvx /bin/
+COPY --from=uv-bin /uv /uvx /bin/
 
 # Install Node.js (official binary)
 ARG NODE_VERSION=24.13.0
@@ -48,12 +54,19 @@ ENV PATH=/usr/local/share/npm-global/bin:$PATH
 
 # Set `DEVCONTAINER` environment variable to help with orientation
 ENV DEVCONTAINER=true
+ENV EDITOR=emacs
+ENV VISUAL=emacs
 
 ARG GIT_DELTA_VERSION=0.18.2
 RUN ARCH=$(dpkg --print-architecture) && \
   wget "https://github.com/dandavison/delta/releases/download/${GIT_DELTA_VERSION}/git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
   dpkg -i "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
   rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"
+
+# Create command history directory with proper permissions
+RUN mkdir -p /commandhistory && \
+    touch /commandhistory/.zsh_history && \
+    chown -R ${USERNAME}:${USERNAME} /commandhistory
 
 USER ${USERNAME}
 
@@ -66,6 +79,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -p aliases \
   -p git \
   -p https://github.com/zsh-users/zsh-syntax-highlighting \
+  -p fzf \
   -a "export HISTFILE=/commandhistory/.zsh_history" \
   -x
 
