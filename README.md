@@ -16,7 +16,7 @@ This environment includes the following tools and configurations to streamline y
     - **Syntax Highlighting**: Visually prevents command entry errors.
     - **Git Delta**: Enhances `git diff` output for better readability.
 - **Node.js**: v24 (LTS) - Includes the latest LTS version. Ready for frontend and server-side JavaScript development.
-- **Python (uv)**: [uv](https://github.com/astral-sh/uv) (v0.9.28) - An extremely fast Python package and project manager. Handles Python version management and dependency resolution in one tool.
+- **Python (uv)**: [uv](https://github.com/astral-sh/uv) (v0.13.5) - An extremely fast Python package and project manager. Handles Python version management and dependency resolution in one tool.
 
 ### Pre-installed Tools
 

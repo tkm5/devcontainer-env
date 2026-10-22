@@ -1,4 +1,4 @@
-ARG UV_VERSION=0.9.28
+ARG UV_VERSION=0.13.5
 FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-bin
 
 FROM ubuntu:noble
@@ -39,7 +39,7 @@ RUN echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}
 COPY --from=uv-bin /uv /uvx /bin/
 
 # Install Node.js (official binary)
-ARG NODE_VERSION=24.13.0
+ARG NODE_VERSION=24.22.1
 RUN ARCH=$(dpkg --print-architecture) && \
   if [ "$ARCH" = "amd64" ]; then ARCH="x64"; fi && \
   wget -qO node.tar.xz "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}.tar.xz" && \

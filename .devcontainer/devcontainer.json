@@ -4,8 +4,8 @@
     "dockerfile": "Dockerfile",
     "args": {
       "TZ": "${localEnv:TZ:Asia/Tokyo}",
-      "NODE_VERSION": "24.13.0",
-      "UV_VERSION": "0.9.28",
+      "NODE_VERSION": "24.22.1",
+      "UV_VERSION": "0.13.5",
       "GEMINI_CLI_VERSION": "latest",
       "GIT_DELTA_VERSION": "0.18.2",
       "ZSH_IN_DOCKER_VERSION": "1.2.1"
