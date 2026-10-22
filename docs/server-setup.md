@@ -203,8 +203,8 @@ git config user.name    # => Your configured name
 git config user.email   # => Your configured email
 
 # Dev tools
-node --version          # => v24.13.0
-uv --version            # => 0.9.28
+node --version          # => v24.22.1
+uv --version            # => 0.13.5
 gh --version            # => GitHub CLI
 
 # AI tools
